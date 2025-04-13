@@ -2,6 +2,8 @@ import {
   formatUnit,
   sortInventory,
   filterForPrint,
+  eliminarProducto,
+  obtenerProductos,
 } from "./inventory-manager.js";
 
 // Elementos del DOM
@@ -11,7 +13,6 @@ const closeBtn = document.querySelector(".close");
 const productForm = document.getElementById("product-form");
 const modalTitle = document.getElementById("modal-title");
 
-// Renderizar inventario
 function renderInventory(products) {
   tableBody.innerHTML = "";
 
@@ -22,19 +23,34 @@ function renderInventory(products) {
   productsToDisplay.forEach((product) => {
     const row = document.createElement("tr");
     row.innerHTML = `
-              <td>${product.name}</td>
-              <td>${product.category}</td>
-              <td>${product.quantity}</td>
-              <td>${formatUnit(product.unit)}</td>
-              <td class="no-print action-btns">
-                  <button class="edit-btn" data-id="${
-                    product.id
-                  }">✏️ Editar</button>
-                  <button class="btn-danger delete-btn" data-id="${
-                    product.id
-                  }">🗑️ Eliminar</button>
-              </td>
-          `;
+      <td>${product.name}</td>
+      <td>${product.category}</td>
+      <td>${product.quantity}</td>
+      <td>${formatUnit(product.unit)}</td>
+      <td class="no-print action-btns">
+        <button class="edit-btn" data-id="${product.id}">✏️ Editar</button>
+        <button class="btn-danger delete-btn" data-id="${
+          product.id
+        }">🗑️ Eliminar</button>
+      </td>
+    `;
+
+    // Agregar listeners después de insertar la fila
+    const editBtn = row.querySelector(".edit-btn");
+    const deleteBtn = row.querySelector(".delete-btn");
+
+    editBtn.addEventListener("click", () => {
+      alert(`Funcionalidad de edición en desarrollo para: ${product.name}`);
+    });
+
+    deleteBtn.addEventListener("click", () => {
+      const confirmar = confirm(`¿Estás seguro de eliminar "${product.name}"?`);
+      if (confirmar) {
+        eliminarProducto(product.id);
+        row.remove(); // 🔥 Esto elimina solo esa fila
+      }
+    });
+
     tableBody.appendChild(row);
   });
 }

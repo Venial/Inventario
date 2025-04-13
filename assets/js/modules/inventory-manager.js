@@ -26,4 +26,29 @@ function filterForPrint(products) {
   return products.filter((product) => product.quantity > 0);
 }
 
+let productos = [];
+
+function agregarProducto(producto) {
+  productos.push(producto);
+}
+
+function obtenerProductos() {
+  return productos;
+}
+
+function eliminarProducto(id) {
+  const index = productos.findIndex((p) => p.id === id);
+  if (index !== -1) {
+    productos.splice(index, 1);
+    console.log("Producto eliminado:", id);
+  }
+}
+
+// Podés agregar esto si querés reiniciar la lista:
+function setProductos(nuevosProductos) {
+  productos = nuevosProductos;
+}
+
+export { agregarProducto, obtenerProductos, eliminarProducto, setProductos };
+
 export { formatUnit, sortInventory, filterForPrint };
