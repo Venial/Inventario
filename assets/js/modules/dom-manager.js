@@ -29,34 +29,78 @@ function renderInventory(products) {
     ? filterForPrint(products)
     : sortInventory(products);
 
+  // Cerrar cualquier menú abierto previamente
+  const closeAllMenus = () => {
+    document.querySelectorAll(".mobile-actions-dropdown").forEach((menu) => {
+      menu.classList.remove("show");
+    });
+  };
+
   productsToDisplay.forEach((product) => {
     const row = document.createElement("tr");
 
-    // Creamos celdas con atributos data-label para móviles
     row.innerHTML = `
       <td data-label="Producto">${product.name}</td>
       <td data-label="Rubro">${product.category}</td>
       <td data-label="Cantidad">${product.quantity}</td>
       <td data-label="Unidad">${formatUnit(product.unit)}</td>
-      <td class="no-print action-btns" data-label="Acciones">
-        <button class="edit-btn" data-id="${product.id}">✏️ Editar</button>
-        <button class="delete-btn" data-id="${product.id}">🗑️ Eliminar</button>
+      <td class="no-print" data-label="Acciones">
+        <div class="action-btns">
+          <button class="edit-btn" data-id="${product.id}">✏️ Editar</button>
+          <button class="delete-btn" data-id="${
+            product.id
+          }">🗑️ Eliminar</button>
+        </div>
+        <div class="mobile-actions-container">
+          <button class="mobile-actions-trigger" data-id="${
+            product.id
+          }">⋮</button>
+          <div class="mobile-actions-dropdown">
+            <button class="mobile-edit-btn" data-id="${
+              product.id
+            }">✏️ Editar</button>
+            <button class="mobile-delete-btn" data-id="${
+              product.id
+            }">🗑️ Eliminar</button>
+          </div>
+        </div>
       </td>
     `;
 
-    const editBtn = row.querySelector(".edit-btn");
-    const deleteBtn = row.querySelector(".delete-btn");
-
-    editBtn.addEventListener("click", () => {
+    // Eventos para escritorio
+    row.querySelector(".edit-btn")?.addEventListener("click", () => {
       setupModal(true, product);
     });
 
-    deleteBtn.addEventListener("click", () => {
-      showDeleteModal(product); // Solo esta línea para el modal personalizado
+    row.querySelector(".delete-btn")?.addEventListener("click", () => {
+      showDeleteModal(product);
+    });
+
+    // Eventos para móvil
+    const trigger = row.querySelector(".mobile-actions-trigger");
+    const dropdown = row.querySelector(".mobile-actions-dropdown");
+
+    trigger.addEventListener("click", (e) => {
+      e.stopPropagation();
+      closeAllMenus();
+      dropdown.classList.toggle("show");
+    });
+
+    row.querySelector(".mobile-edit-btn")?.addEventListener("click", () => {
+      setupModal(true, product);
+      closeAllMenus();
+    });
+
+    row.querySelector(".mobile-delete-btn")?.addEventListener("click", () => {
+      showDeleteModal(product);
+      closeAllMenus();
     });
 
     tableBody.appendChild(row);
   });
+
+  // Cerrar menús al hacer click en cualquier lugar
+  document.addEventListener("click", closeAllMenus);
 }
 
 // Configurar modal
