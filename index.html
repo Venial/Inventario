@@ -68,6 +68,20 @@
         </form>
       </div>
     </div>
+    <!-- Modal de confirmación de eliminación -->
+    <div id="delete-modal" class="modal">
+      <div class="modal-content">
+        <span class="close" id="close-delete-modal">&times;</span>
+        <h2>Eliminar Producto</h2>
+        <p id="delete-message">
+          ¿Estás seguro de eliminar "<span id="product-to-delete"></span>"?
+        </p>
+        <div class="modal-actions">
+          <button id="confirm-delete" class="btn-danger">Eliminar</button>
+          <button id="cancel-delete" class="btn-cancel">Cancelar</button>
+        </div>
+      </div>
+    </div>
   </body>
   <script src="assets/js/main.js" type="module"></script>
   <script src="assets/js/modules/date-updater.js" type="module"></script>
