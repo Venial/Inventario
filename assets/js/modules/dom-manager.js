@@ -4,6 +4,8 @@ import {
   filterForPrint,
   eliminarProducto,
   obtenerProductos,
+  editarProducto,
+  agregarProducto,
 } from "./inventory-manager.js";
 
 // Elementos del DOM
@@ -40,7 +42,13 @@ function renderInventory(products) {
     const deleteBtn = row.querySelector(".delete-btn");
 
     editBtn.addEventListener("click", () => {
-      alert(`Funcionalidad de edición en desarrollo para: ${product.name}`);
+      console.log(
+        "Editando producto ID:",
+        product.id,
+        "Tipo:",
+        typeof product.id
+      );
+      setupModal(true, product);
     });
 
     deleteBtn.addEventListener("click", () => {
@@ -59,6 +67,7 @@ function renderInventory(products) {
 function setupModal(isEditing = false, product = null) {
   modalTitle.textContent = isEditing ? "Editar Producto" : "Agregar Producto";
   if (isEditing && product) {
+    console.log("Configurando modal para editar producto ID:", product.id); // Debug
     document.getElementById("product-id").value = product.id;
     document.getElementById("product-name").value = product.name;
     document.getElementById("product-category").value = product.category;
@@ -82,5 +91,54 @@ window.addEventListener("click", (e) => {
     closeModal();
   }
 });
+
+export function setupFormSubmit() {
+  productForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const productId = document.getElementById("product-id").value;
+    const productData = {
+      name: document.getElementById("product-name").value.trim(),
+      category: document.getElementById("product-category").value.trim(),
+      quantity: parseFloat(document.getElementById("product-quantity").value),
+      unit: document.getElementById("product-unit").value,
+    };
+
+    // Validación
+    if (
+      !productData.name ||
+      !productData.category ||
+      isNaN(productData.quantity)
+    ) {
+      alert("Complete todos los campos correctamente");
+      return;
+    }
+
+    if (productId) {
+      // Modo edición
+      console.log("Intentando guardar edición para ID:", productId);
+      const success = editarProducto(productId, productData);
+
+      if (success) {
+        renderInventory(obtenerProductos());
+        closeModal();
+      } else {
+        alert(`Error: No se encontró el producto con ID ${productId}`);
+        console.log("Productos actuales:", obtenerProductos());
+      }
+    } else {
+      // Modo agregar
+      agregarProducto({
+        ...productData,
+        id: Date.now().toString(),
+      });
+      renderInventory(obtenerProductos());
+      closeModal();
+    }
+  });
+}
+
+// Configurar el botón de cerrar
+closeBtn.addEventListener("click", closeModal);
 
 export { renderInventory, setupModal, closeModal };

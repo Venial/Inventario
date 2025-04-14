@@ -11,7 +11,7 @@ const inventory = [
     name: "CHINCHULIN",
     category: "ACHURAS",
     quantity: 0,
-    unit: "unidades",
+    unit: "kg",
   },
   {
     id: 3,

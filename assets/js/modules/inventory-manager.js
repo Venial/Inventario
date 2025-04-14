@@ -49,6 +49,41 @@ function setProductos(nuevosProductos) {
   productos = nuevosProductos;
 }
 
-export { agregarProducto, obtenerProductos, eliminarProducto, setProductos };
+function editarProducto(id, nuevosDatos) {
+  // Asegurarnos que el ID es string
+  const idStr = String(id);
 
-export { formatUnit, sortInventory, filterForPrint };
+  const index = productos.findIndex((p) => String(p.id) === idStr);
+
+  if (index !== -1) {
+    // Actualizar solo los campos permitidos manteniendo el ID original
+    productos[index] = {
+      id: productos[index].id, // Mantener el ID original
+      name: nuevosDatos.name,
+      category: nuevosDatos.category,
+      quantity: nuevosDatos.quantity,
+      unit: nuevosDatos.unit,
+    };
+
+    console.log("Producto actualizado:", productos[index]);
+    return true;
+  }
+
+  console.error("Producto no encontrado. ID buscado:", idStr);
+  console.error(
+    "IDs existentes:",
+    productos.map((p) => String(p.id))
+  );
+  return false;
+}
+
+export {
+  agregarProducto,
+  obtenerProductos,
+  editarProducto,
+  eliminarProducto,
+  setProductos,
+  formatUnit,
+  sortInventory,
+  filterForPrint,
+};
