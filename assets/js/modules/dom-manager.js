@@ -65,9 +65,13 @@ function renderInventory(products) {
 
 // Configurar modal
 function setupModal(isEditing = false, product = null) {
+  // Resetear estado
+  modal.classList.remove("show");
+
+  // Configurar contenido
   modalTitle.textContent = isEditing ? "Editar Producto" : "Agregar Producto";
+
   if (isEditing && product) {
-    console.log("Configurando modal para editar producto ID:", product.id); // Debug
     document.getElementById("product-id").value = product.id;
     document.getElementById("product-name").value = product.name;
     document.getElementById("product-category").value = product.category;
@@ -77,15 +81,35 @@ function setupModal(isEditing = false, product = null) {
     productForm.reset();
     document.getElementById("product-id").value = "";
   }
-  modal.style.display = "block";
+
+  // Mostrar con animación
+  setTimeout(() => {
+    modal.style.display = "flex";
+    setTimeout(() => {
+      modal.classList.add("show");
+      document.body.style.overflow = "hidden";
+    }, 10);
+  }, 10);
 }
 
-// Cerrar modal
 function closeModal() {
-  modal.style.display = "none";
+  modal.classList.remove("show");
+  setTimeout(() => {
+    modal.style.display = "none";
+    document.body.style.overflow = "";
+  }, 300);
 }
 
-// Cerrar al hacer clic fuera
+// Asegúrate de que el event listener del cierre esté bien configurado
+closeBtn.addEventListener("click", closeModal);
+
+window.addEventListener("click", (e) => {
+  if (e.target === modal) {
+    closeModal();
+  }
+});
+
+// Modifica el event listener para cerrar al hacer clic fuera
 window.addEventListener("click", (e) => {
   if (e.target === modal) {
     closeModal();
