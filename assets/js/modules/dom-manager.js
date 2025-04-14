@@ -83,12 +83,13 @@ function setupModal(isEditing = false, product = null) {
       modal.classList.add("show");
       document.body.style.overflow = "hidden";
 
-      // Enfocar el campo de cantidad solo en modo edición
-      if (isEditing) {
-        const quantityInput = document.getElementById("product-quantity");
-        quantityInput.focus();
-        quantityInput.select(); // Opcional: selecciona el texto existente
-      }
+      // Enfocar el campo correspondiente según el modo
+      const inputToFocus = isEditing
+        ? document.getElementById("product-quantity")
+        : document.getElementById("product-name");
+
+      inputToFocus.focus();
+      inputToFocus.select(); // Opcional: selecciona el texto existente
     }, 10);
   }, 10);
 }
