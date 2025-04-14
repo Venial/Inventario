@@ -29,12 +29,8 @@ function renderInventory(products) {
     ? filterForPrint(products)
     : sortInventory(products);
 
-  // Cerrar cualquier menú abierto previamente
-  const closeAllMenus = () => {
-    document.querySelectorAll(".mobile-actions-dropdown").forEach((menu) => {
-      menu.classList.remove("show");
-    });
-  };
+  // Variable para rastrear el menú abierto
+  let currentOpenMenu = null;
 
   productsToDisplay.forEach((product) => {
     const row = document.createElement("tr");
@@ -67,40 +63,65 @@ function renderInventory(products) {
       </td>
     `;
 
-    // Eventos para escritorio
-    row.querySelector(".edit-btn")?.addEventListener("click", () => {
-      setupModal(true, product);
-    });
-
-    row.querySelector(".delete-btn")?.addEventListener("click", () => {
-      showDeleteModal(product);
-    });
-
-    // Eventos para móvil
     const trigger = row.querySelector(".mobile-actions-trigger");
     const dropdown = row.querySelector(".mobile-actions-dropdown");
+    const mobileEditBtn = row.querySelector(".mobile-edit-btn");
+    const mobileDeleteBtn = row.querySelector(".mobile-delete-btn");
 
+    // Evento para el botón de tres puntos
     trigger.addEventListener("click", (e) => {
       e.stopPropagation();
-      closeAllMenus();
-      dropdown.classList.toggle("show");
+
+      // Si este menú ya está abierto, cerrarlo
+      if (currentOpenMenu === dropdown) {
+        dropdown.classList.remove("show");
+        currentOpenMenu = null;
+        return;
+      }
+
+      // Cerrar cualquier menú previamente abierto
+      if (currentOpenMenu) {
+        currentOpenMenu.classList.remove("show");
+      }
+
+      // Abrir el menú actual
+      dropdown.classList.add("show");
+      currentOpenMenu = dropdown;
     });
 
-    row.querySelector(".mobile-edit-btn")?.addEventListener("click", () => {
+    // Eventos para los botones del menú
+    mobileEditBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
       setupModal(true, product);
-      closeAllMenus();
+      dropdown.classList.remove("show");
+      currentOpenMenu = null;
     });
 
-    row.querySelector(".mobile-delete-btn")?.addEventListener("click", () => {
+    mobileDeleteBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
       showDeleteModal(product);
-      closeAllMenus();
+      dropdown.classList.remove("show");
+      currentOpenMenu = null;
     });
+
+    // Eventos para la versión de escritorio
+    row
+      .querySelector(".edit-btn")
+      .addEventListener("click", () => setupModal(true, product));
+    row
+      .querySelector(".delete-btn")
+      .addEventListener("click", () => showDeleteModal(product));
 
     tableBody.appendChild(row);
   });
 
-  // Cerrar menús al hacer click en cualquier lugar
-  document.addEventListener("click", closeAllMenus);
+  // Cerrar menú al hacer click fuera
+  document.addEventListener("click", () => {
+    if (currentOpenMenu) {
+      currentOpenMenu.classList.remove("show");
+      currentOpenMenu = null;
+    }
+  });
 }
 
 // Configurar modal
