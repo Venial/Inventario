@@ -2,7 +2,10 @@
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
     <title>Sistema de Gestión de Inventario</title>
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
@@ -13,19 +16,25 @@
   <body>
     <div id="current-date"></div>
     <div class="inventory-container">
-      <button class="print-btn no-print" onclick="window.print()">
-        🖨️ Imprimir
-      </button>
+      <div class="header-actions">
+        <div id="current-date"></div>
+        <button class="print-btn no-print" onclick="window.print()">
+          🖨️ Imprimir
+        </button>
+      </div>
+      
       <div class="search-container no-print">
         <input
           type="text"
           id="search-input"
-          placeholder="Buscar producto o rubro..."
-          style="flex-grow: 1"
+          placeholder="Buscar producto..."
+          class="search-input"
         />
-        <button id="add-product-btn">➕ Agregar Producto</button>
+        <button id="add-product-btn" class="add-product-btn">➕ Agregar</button>
       </div>
-      <table id="inventory-table">
+      
+      <div class="table-responsive">
+        <table id="inventory-table">
         <thead>
           <tr>
             <th>Producto</th>

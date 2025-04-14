@@ -31,12 +31,14 @@ function renderInventory(products) {
 
   productsToDisplay.forEach((product) => {
     const row = document.createElement("tr");
+
+    // Creamos celdas con atributos data-label para móviles
     row.innerHTML = `
-      <td>${product.name}</td>
-      <td>${product.category}</td>
-      <td>${product.quantity}</td>
-      <td>${formatUnit(product.unit)}</td>
-      <td class="no-print action-btns">
+      <td data-label="Producto">${product.name}</td>
+      <td data-label="Rubro">${product.category}</td>
+      <td data-label="Cantidad">${product.quantity}</td>
+      <td data-label="Unidad">${formatUnit(product.unit)}</td>
+      <td class="no-print action-btns" data-label="Acciones">
         <button class="edit-btn" data-id="${product.id}">✏️ Editar</button>
         <button class="delete-btn" data-id="${product.id}">🗑️ Eliminar</button>
       </td>
